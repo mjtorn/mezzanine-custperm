@@ -7,35 +7,35 @@ admin you want to patch and which function will be used as its ``queryset`` meth
 Usage
 -----
 
-> INSTALLED_APPS = (
->     ..., # Theme or whatever
->     'mezzacustperm',
->     'django.contrib.admin,
->     ...
-> )
+INSTALLED_APPS = (
+    ..., # Theme or whatever
+   'mezzacustperm',
+   'django.contrib.admin,
+   ...
+)
 
-> CUSTOM_PERMISSIONS = (
->     ('mezzanine.blog.admin.BlogPostAdmin', 'your_site.utils.custom_permissions.allow_editors'),
-> )
+CUSTOM_PERMISSIONS = (
+   ('mezzanine.blog.admin.BlogPostAdmin', 'your_site.utils.custom_permissions.allow_editors'),
+)
 
 Then what `your_site.utils.custom_permissions.allow_editors` might look like:
 
-> def allow_editors(self, request):
->    ""Method-like function to use with custom permission admins
->    ""
->
->    qs = self.model._default_manager.get_query_set()
->
->    ordering = self.get_ordering(request)
->    if ordering:
->        qs = qs.order_by(*ordering)
->
->    if request.user.is_superuser:
->        return qs
->    elif request.user.groups.filter(name__icontains='editors').exists():
->        return qs
->
->    return qs.none()
+def allow_editors(self, request):
+  """Method-like function to use with custom permission admins
+  """
+
+  qs = self.model._default_manager.get_query_set()
+
+  ordering = self.get_ordering(request)
+  if ordering:
+      qs = qs.order_by(*ordering)
+
+  if request.user.is_superuser:
+      return qs
+  elif request.user.groups.filter(name__icontains='editors').exists():
+      return qs
+
+    return qs.none()
 
 Notes
 -----
